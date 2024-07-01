@@ -23,6 +23,6 @@ router.get("/Usuarios", verifyToken, getUsuario);
 router.post("/Usuarios", createUsuario);
 router.put("/Usuarios/:usuarioID", updateUsuario);
 router.delete("/Usuarios/:usuarioID", deleteUsuario);
-router.get("/Usuarios/:UsuarioCORREO/:UsuarioCONTRASENA", validLogin);
+router.post("/login", validLogin);
 
 module.exports = router;

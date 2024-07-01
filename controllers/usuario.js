@@ -5,28 +5,26 @@ const jwt = require("jsonwebtoken")
 
 const validLogin = async (req, res) => {
   try {
-    let username = req.params.UsuarioCORREO;
-    let password = req.params.UsuarioCONTRASENA;
+    let username = req.body.UsuarioCORREO;
+    let password = req.body.UsuarioCONTRASENA;
     let datos = [];
 
-    const user = await Usuario.findOne({ Correo: req.params.UsuarioCORREO }).exec();
-    let JasaiLive = user;
+    const user = await Usuario.findOne({ Correo: username }).exec();
 
     if (!user) {
       return res.status(404).send({ message: "Usuario no encontrado" });
     }
 
-    if (username === user.Correo) {
-      if (password === user.Contrasena) {
-        jwt.sign({ user: JasaiLive }, "pdf", (err, token) => {
-          datos.push(user.Correo, token);
-          return res.status(200).send({ message: "Has iniciado sesión"});
-        });
-      } else {
-        return res.status(400).send({ message: "Contraseña incorrecta" });
-      }
+    if (password === user.Contrasena) {
+      jwt.sign({ user: user }, process.env.TOKEN_SECRET, (err, token) => {
+        if (err) {
+          return res.status(500).send({ message: "Error al generar el token" });
+        }
+        datos.push({ correo: user.Correo, token: token });
+        return res.status(200).send({ datos });
+      });
     } else {
-      return res.status(400).send({ message: "Nombre de usuario incorrecto" });
+      return res.status(400).send({ message: "Contraseña incorrecta" });
     }
   } catch (error) {
     console.error(error);

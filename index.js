@@ -10,6 +10,7 @@ const rateLimit = require("express-rate-limit");
 dotenv.config();
 
 
+
 // Puerto
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -30,7 +31,6 @@ mongoose
   });
 
 app.use(cors())
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
